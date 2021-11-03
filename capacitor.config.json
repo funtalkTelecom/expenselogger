@@ -1,0 +1,6 @@
+{
+	"appId": "io.ionic.starter",
+	"appName": "expenselogger",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}
