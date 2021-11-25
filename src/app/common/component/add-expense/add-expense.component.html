@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+      <ion-title>Add Expense</ion-title>
+      <ion-button slot="end" fill="solid" color="danger" (click)="dismissModal()">
+          <ion-icon name="close-circle-outline"></ion-icon>
+      </ion-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="addExpenseForm">
+      <ion-label color="danger" position="floating" *ngIf="addExpenseForm.controls.amount.invalid && addExpenseForm.controls.amount.touched">
+          Amount is Not Valid
+      </ion-label>
+
+     <ion-item>
+                 <ion-label>Select Date</ion-label>
+                 <ion-datetime displayFormat="DD/MMM/YYYY" formControlName="expenseDate"></ion-datetime>
+     </ion-item>
+
+      <ion-item>
+          <ion-input type="number" placeholder="Amount" inputmode="decimal" formControlName="amount" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+          <ion-textarea placeholder="Description" type="text" formControlName="description"></ion-textarea>
+      </ion-item>
+
+      <ion-item>
+          <ion-label>Select Type</ion-label>
+          <ion-select value="" okText="Ok" cancelText="Cancel" interface="popover" formControlName="type" required>
+              <ion-select-option [value]="type.value" *ngFor="let type of expenseTypes | keyvalue" >{{type.value}}</ion-select-option>
+          </ion-select>
+      </ion-item>
+      <br>
+      <ion-button color="primary" fill="solid" size="large" expand="block"
+                  (click)="addExpense()" [disabled]="!addExpenseForm.valid">add</ion-button>
+  </form>
+</ion-content>
