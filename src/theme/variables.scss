@@ -1,6 +1,18 @@
 // Ionic Variables and Theming. For more info, please see:
 // http://ionicframework.com/docs/theming/
 
+.clearfix::after{
+  content: "";
+  display: block;
+  height: 0px;
+  clear: both;
+}
+
+.transparent-modal .modal-wrapper {
+  --background: rgba(235, 228, 229, 0.158);
+}
+
+
 /** Ionic CSS Variables **/
 :root {
   /** primary **/

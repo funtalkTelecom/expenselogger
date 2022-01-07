@@ -1,0 +1,53 @@
+
+
+#background-content {
+  left: 0px;
+  right: 0px;
+  top: calc(var(--offset-top) * -1);
+  bottom: calc(var(--offset-bottom) * -1);
+  position: absolute;
+  background: var(--background);
+  background-position: bottom;
+}
+
+ion-content{
+  --background: url(../../../../assets/intro1.jpg);
+  background-position: bottom;
+  background-size:cover;
+  background-repeat: no-repeat;
+
+
+
+  ion-list{
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+
+    // margin: 4vh;
+    border-radius: 20px;
+    box-shadow: 0 0 3px 0 var(--ion-color-medium);
+    ion-segment{
+      --background:var(--ion-color-primary-contrast);
+      border-radius: 20px;
+      border:1px solid lightgray;
+      --margin-top:5px;
+      --margin-bottom:5px;
+      ion-segment-button{
+        // --background-checked:var(--ion-color-primary);
+        --indicator-color:var(--ion-color-primary);
+        --border-radius:20px;
+        // --indicator-height:70%;
+        // --indicator-transform:translateY(1vh);
+        --color:var(--ion-color-primary);
+        --color-checked:var(--ion-color-primary-contrast);
+      }
+    }
+  }
+}
+
+.marginBottom{
+  margin-bottom: 5vh;
+}

@@ -1,0 +1,14 @@
+<ion-content>
+<ion-slides #slides pager="true" [options]="slideOpts">
+  <ion-slide style="background-image:'url(assets/intro1.jpg)'" class="top-right">
+  <ion-button  fill="clear" class="ion-text-right" color="light" (click)="toLogin()">SKIP</ion-button>
+  </ion-slide>
+  <ion-slide style="background-image:'url(assets/intro2.jpg)'" class="top-right">
+    <ion-button  fill="clear" color="light" (click)="toLogin()">SKIP</ion-button>
+  </ion-slide>
+  <ion-slide style="background-image:'url(assets/intro3.jpg)'">
+    <ion-button fill="outline" shape="round" color="primary" class="transformButton" (click)="toLogin()">
+      <ion-text color="light">Let's Start</ion-text></ion-button>
+  </ion-slide>
+</ion-slides>
+</ion-content>

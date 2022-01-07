@@ -9,10 +9,10 @@ const routes: Routes = [
     canLoad:[AuthGuard],
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
-  {
-    path: 'login',
-    loadChildren: () => import('./page/login/login.module').then( m => m.LoginPageModule)
-  },
+  // {
+  //   path: 'login',
+  //   loadChildren: () => import('./page/login/login.module').then( m => m.LoginPageModule)
+  // },
   {
     path: 'register',
     loadChildren: () => import('./page/register/register.module').then( m => m.RegisterPageModule)
@@ -21,7 +21,16 @@ const routes: Routes = [
     path: 'forgetpassword',
     loadChildren: () => import('./page/forgetpassword/forgetpassword.module').then( m => m.ForgetpasswordPageModule)
   },
-  { path: '**', redirectTo: 'tabs',pathMatch: 'full'}
+  {
+    path: 'introduction',
+    loadChildren: () => import('./page/auth/introduction/introduction.module').then( m => m.IntroductionPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./page/auth/login/login.module').then( m => m.LoginPageModule)
+  },
+  { path: '**', redirectTo: 'login',pathMatch: 'full'}
+
 ];
 @NgModule({
   imports: [

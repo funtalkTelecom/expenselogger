@@ -3,28 +3,24 @@
       <ion-card no-margin>
           <ion-card-header color="primary">
               <ion-card-title>
-                  Total {{todayTotal | currency: 'USD'}}
+                  Total: {{monthAmount.toFixed(2)| currency:'SEK '}}
               </ion-card-title>
-              <ion-card-subtitle>
-                  {{selectedDate | date}}
+              <ion-card-subtitle class="font-size">
+                  {{searchMonth}}
               </ion-card-subtitle>
           </ion-card-header>
           <ion-footer>
               <ion-row>
-                  <ion-col size="3">
-                      <ion-button expand="full" fill="solid" (click)="setCurrentToTodayDate()">Today</ion-button>
-                  </ion-col>
-                  <ion-col size="3">
+                  <ion-col size="4">
                       <ion-button color="primary" expand="full" fill="solid" (click)="selected.open()">Date</ion-button>
                       <ion-datetime hidden
                                     #selected
+                                    pickerFormat='YYYY-MM'
                                     [value]="selectedDate.toISOString()"
                                     (ionChange)="changeSelectedDate(selected.value)"
-                                    min="2020"
-                                    [max]="todayDate.toISOString()"
                       ></ion-datetime>
                   </ion-col>
-                  <ion-col size="3">
+                  <ion-col size="4">
                       <ion-button expand="full" fill="solid" (click)="selectedValue.open()">Type</ion-button>
                       <ion-item hidden>
                           <ion-select interface="popover" #selectedValue>
@@ -33,9 +29,9 @@
                           </ion-select>
                       </ion-item>
                   </ion-col>
-                  <ion-col size="3">
+                  <ion-col size="4">
                       <ion-button expand="full" fill="solid" (click)="priceFilter()">
-                          <ion-icon name="logo-usd"></ion-icon>
+                          Sort
                           <ion-icon *ngIf="filterByPrice"
                                     [name]="filterByPriceUp ? 'arrow-up' : 'arrow-down'"></ion-icon>
                       </ion-button>
@@ -50,15 +46,15 @@
 
   <ion-card *ngFor="let expense of expenses | catagory: selectedValue.value">
       <ion-toolbar color="primary">
+        <ion-title class="font-size marginleft">SEK {{expense.amount.toFixed(2)}}</ion-title>
           <ion-buttons slot="end">
               <ion-button>
-                  <ion-icon size="large" name="help-circle-outline"></ion-icon>
+                  <ion-icon  name="help-circle-outline"></ion-icon>
               </ion-button>
               <ion-button>
-                  <ion-icon src="assets/icon/pencil-outline.svg" size="large"></ion-icon>
+                <ion-icon name="pencil-outline" size="small"></ion-icon>
               </ion-button>
           </ion-buttons>
-          <ion-title slot="start" size="large">$ {{expense.amount}}</ion-title>
       </ion-toolbar>
       <ion-card-content>
           <ion-text>
@@ -66,16 +62,25 @@
           </ion-text>
           <ion-grid>
               <ion-row>
-                  <ion-col size="6" class="ion-text-center">
-                      {{expense.createdOn | date}}
+                  <ion-col size="6" >
+                      {{expense.createTime | date}}
                   </ion-col>
                   <ion-col size="6">
-                      {{expense.type}}
+                      {{expense.expenseType}}
                   </ion-col>
               </ion-row>
           </ion-grid>
       </ion-card-content>
   </ion-card>
+
+  <ion-text color="dark" [hidden]="hiddenNoMore">
+    <h5 align='center'>no more...</h5>
+  </ion-text>
+
+  <ion-infinite-scroll threshold="15%" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data ..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
       <ion-fab-button (click)="presentModal()" color="success">
           <ion-icon name="add"></ion-icon>

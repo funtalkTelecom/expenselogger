@@ -1,3 +1,4 @@
+import { User } from './../interface/user';
 import { Router } from '@angular/router';
 import {Injectable, OnInit} from '@angular/core';
 import {BehaviorSubject, from, Observable, of, scheduled, throwError} from 'rxjs';
@@ -7,6 +8,9 @@ import {LodashService} from './lodash.service';
 import {LocalStoreService  } from './localstore.service';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { switchMap, tap } from 'rxjs/operators';
+import { AppRoutes } from '../common/constant';
+import { ModalController, ToastController } from '@ionic/angular';
+import  jwtDecode  from 'jwt-decode';
 
 const ACCESS_TOKEN_KEY = 'access-token';
 const REFRESH_TOKEN_KEY = 'refresh-token';
@@ -17,7 +21,9 @@ const REFRESH_TOKEN_KEY = 'refresh-token';
 export class AuthService implements OnInit {
 
     isAuthenticated: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(null);
-    currentAccessToken = null;
+    consumerId=null;
+    consumerRole=[];
+    accessToken = null;
     apiUrl = environment.apiUrl;
 
     private currentUserStatus: boolean;
@@ -26,17 +32,28 @@ export class AuthService implements OnInit {
         private http: HttpClient,
         private _: LodashService,
         private localStoreService: LocalStoreService,
-        private router: Router
+        private router: Router,
+        private toastController: ToastController,
+        private modalController: ModalController
     ) {
 
         const token = this.localStoreService.getFromLocalStorage(ACCESS_TOKEN_KEY);
 
         token.then(localToken=>{
+
               if (localToken) {
-                this.currentAccessToken = localToken;
-                this.isAuthenticated.next(true);
+                  const decodedToken=jwtDecode<{sub: string;roles: []}>(localToken);
+                  this.consumerId=decodedToken.sub;
+                  this.consumerRole=decodedToken.roles;
+                  this.accessToken = localToken;
+                  this.isAuthenticated.next(true);
+                  console.log(this.consumerId+'--'+this.consumerRole);
+
               } else {
-                this.isAuthenticated.next(false);
+                  this.consumerId=null;
+                  this.consumerRole=[];
+                  this.accessToken = null;
+                  this.isAuthenticated.next(false);
               }
             }
           );
@@ -54,19 +71,18 @@ export class AuthService implements OnInit {
     }
 
     // Sign in a user and store access and refres token
-    login(credentials: {username: any; password: any}): Observable<any> {
+    login(credentials: {userName: any; passWord: any}): Observable<any> {
 
+      this.accessToken=false;
       return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
-
         switchMap((tokens: {accessToken: any; refreshToken: any }) => {
-
-          console.log(tokens);
-
-          this.currentAccessToken = tokens.accessToken;
+          this.accessToken = tokens.accessToken;
+          const decodedToken=jwtDecode<{sub: string;roles: []}>(this.accessToken);
+          this.consumerId=decodedToken.sub;
+          this.consumerRole=decodedToken.roles;
           const storeAccess = this.localStoreService.saveToLocalStorage(ACCESS_TOKEN_KEY,tokens.accessToken);
           const storeRefresh = this.localStoreService.saveToLocalStorage(REFRESH_TOKEN_KEY,tokens.refreshToken);
           return from(Promise.all([storeAccess, storeRefresh]));
-
         }),
         tap(_ => {
           this.isAuthenticated.next(true);
@@ -91,12 +107,15 @@ export class AuthService implements OnInit {
       //     this.router.navigateByUrl('/', { replaceUrl: true });
       //   })
       // ).subscribe();
+        this.consumerId=null;
+        this.consumerRole=[];
+        this.accessToken = null;
+        this.isAuthenticated.next(false);
+        console.log('logout');
 
-      this.currentAccessToken = null;
-      const deleteAccess = this.localStoreService.removeFromLocalStorage( ACCESS_TOKEN_KEY);
-      const deleteRefresh = this.localStoreService.removeFromLocalStorage( REFRESH_TOKEN_KEY);
-      this.isAuthenticated.next(false);
-      this.router.navigateByUrl('/', { replaceUrl: true });
+        this.localStoreService.removeFromLocalStorage(ACCESS_TOKEN_KEY);
+        this.localStoreService.removeFromLocalStorage(REFRESH_TOKEN_KEY);
+        this.router.navigateByUrl(AppRoutes.LOGIN);
 
     }
 
@@ -110,6 +129,8 @@ export class AuthService implements OnInit {
     // Load the refresh token from storage
     // then attach it as the header for one specific API call
     getNewAccessToken(): Observable<any> {
+
+      this.accessToken=false;
 
       const refreshToken = from(this.localStoreService.getFromLocalStorage(REFRESH_TOKEN_KEY));
       return refreshToken.pipe(
@@ -134,7 +155,7 @@ export class AuthService implements OnInit {
 
     // Store a new access token
     storeAccessToken(accessToken: any) {
-      this.currentAccessToken = accessToken;
+      this.accessToken = accessToken;
       return from(this.localStoreService.saveToLocalStorage(ACCESS_TOKEN_KEY,accessToken));
     }
 
@@ -144,6 +165,25 @@ export class AuthService implements OnInit {
 
     async setCurrentUserStatus(status: boolean): Promise<void> {
         this.currentUserStatus = status;
+    }
+
+    async toLoginPage() {
+
+      const toast = await this.toastController.create({
+        message: 'The token is expired, please re-login!',
+        duration: 2000,
+        position: 'top',
+        color:'warning'
+      });
+      toast.onDidDismiss().then(()=>{
+         this.modalController.dismiss().then().catch();
+         this.logout();
+      });
+      toast.present();
+    }
+
+    getConsumer(): Observable<any>{
+      return this.http.get(`${this.apiUrl}/getuserbyname/${this.consumerId}`);
     }
 
 

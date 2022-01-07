@@ -1,8 +1,44 @@
 <ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/account"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Register</ion-title>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid>
+
+  <div class="register-page">
+
+    <div>
+        <label>phone number</label>
+        <input type="text" value="" placeholder="please enter"/>
+    </div>
+
+    <div style="margin-bottom: 5px;">
+      <label>password</label>
+      <input type="password" value="" placeholder="minimum length is eight"/>
+    </div>
+
+    <p><strong style="color: red;">NOTE:</strong> password is case sensitive and consists of 8 to 20 letters, digits, and special characters.</p>
+
+    <div style="margin-top: 10px;">
+      <label>confirm password</label>
+      <input type="password" value="" placeholder="minimum length is eight"/>
+    </div>
+
+    <div>
+      <label>verification code</label>
+      <input type="text" value="" placeholder="please enter" />
+      <ion-button fill="outline" size="small">resend(60s)</ion-button>
+    </div>
+
+  </div>
+
+  <ion-button class="register-btn">Register</ion-button>
+
+  <!-- <ion-grid>
       <ion-row class="ion-justify-content-center expandHeight">
           <ion-col size="12" class="ion-align-self-center">
               <ion-card #registerCard id="registerCard">
@@ -41,5 +77,7 @@
               </ion-card>
           </ion-col>
       </ion-row>
-  </ion-grid>
+  </ion-grid> -->
+
+
 </ion-content>

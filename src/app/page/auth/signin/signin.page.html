@@ -1,0 +1,49 @@
+<form [formGroup]="form" class="ion-margin">
+
+<div class="ion-margin-vertical">
+  <ion-item lines="full">
+    <ion-input formControlName="userName" type="text" placeholder="Enter username"></ion-input>
+  </ion-item>
+  <ion-text  color="danger" *ngIf="!form.get('userName').valid && form.get('userName').touched">
+    <ion-text class="error" *ngIf="form.get('userName').hasError('required')">
+      *Please enter the username.
+    </ion-text>
+  </ion-text>
+</div>
+<div class="ion-margin-vertical">
+  <ion-item lines="full">
+    <ion-icon [name]="type? 'eye-off-outline':'eye-outline'" slot="end" color="dark" (click)="changeType()"></ion-icon>
+    <ion-input formControlName="passWord" [type]="type?'password':'text'" placeholder="Enter password"></ion-input>
+  </ion-item>
+  <ion-text  color="danger" *ngIf="!form.get('passWord').valid && form.get('passWord').touched">
+    <ion-text class="error" *ngIf="form.get('passWord').hasError('required')">
+      *Please enter the password.
+    </ion-text>
+    <ion-text class="error" *ngIf="!form.get('passWord').hasError('required')&&form.get('passWord').hasError('minlength')">
+      *Please enter the password of at least 6 characters long.
+    </ion-text>
+  </ion-text>
+
+</div>
+
+</form>
+
+<p class="ion-text-right ion-margin-horizontal">
+  <ion-text color="medium">Forgot password?</ion-text>
+</p>
+
+<div class="ion-margin-horizontal">
+  <ion-button size="medium" expand="block" shape="round" color="primary" (click)="onSubmit()">
+    <ion-text class="buttonText">Log In</ion-text>
+ </ion-button>
+</div>
+
+
+<p class="ion-text-center">
+  <ion-text color="medium">OR</ion-text>
+</p>
+<p class="ion-text-center">
+  <ion-icon name="logo-facebook" color="tertiary"></ion-icon>
+  <ion-icon name="logo-twitter" color="secondary"></ion-icon>
+  <ion-icon name="logo-google" color="danger"></ion-icon>
+</p>

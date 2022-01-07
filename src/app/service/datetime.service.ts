@@ -45,8 +45,8 @@ export class DatetimeService {
         return moment(date).toDate();
     }
 
-    getDateTimeISOWithFormat(date?: Date): string {
-        return date ? moment(date).format('L') : moment().format('L');
+    getDateTimeISOWithFormat(date?: Date,format?: string): string {
+        return date ? moment(date).format(format ? format:'L') : moment().format(format? format:'L');
     }
 
 }

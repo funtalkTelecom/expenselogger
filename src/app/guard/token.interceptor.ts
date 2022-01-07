@@ -14,7 +14,7 @@ import { LocalStoreService } from '../service/localstore.service';
  import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
  import { retry, catchError, map, switchMap, finalize, filter, take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { ToastController } from '@ionic/angular';
+import { ModalController, ToastController } from '@ionic/angular';
 
  @Injectable()
  export class TokenInterceptor implements HttpInterceptor {
@@ -27,24 +27,18 @@ import { ToastController } from '@ionic/angular';
     private router: Router,
     private storage: LocalStoreService,
     private authService: AuthService,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private modalController: ModalController
   ) {}
 
     // Intercept every HTTP call
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-      console.log('------------intercept--------------------------');
-      // Check if we need additional token logic or not
-      if (this.isInBlockedList(request.url)) {
-        return next.handle(request).pipe(
-          catchError(err =>{
-                    console.log(err);
-                    return throwError(err);
-                  })
-        );
-      } else {
+        console.log('-----intercept------'+request.url);
+        if(this.isInBlockedList(request.url)){
+          return next.handle(request);
+        }
 
-        console.log('------------intercept-----------addToken---------------');
         return next.handle(this.addToken(request)).pipe(
 
           catchError(err => {
@@ -55,6 +49,8 @@ import { ToastController } from '@ionic/angular';
                   return this.handle400Error(err);
                 case 401:
                   return this.handle401Error(request, next);
+                case 406:
+                  return this.handle406Error(err);
                 default:
                   return throwError(err);
               }
@@ -63,14 +59,14 @@ import { ToastController } from '@ionic/angular';
             }
           })
         );
-      }
+
     }
 
     // Filter out URLs where you don't want to add the token!
     private isInBlockedList(url: string): boolean {
 
-      if (url === `${environment.apiUrl}/login` || url === `${environment.apiUrl}/logout`||
-          url === `${environment.apiUrl}/token/refresh`) {
+      // url === `${environment.apiUrl}/token/refresh`
+      if (url === `${environment.apiUrl}/login` || url === `${environment.apiUrl}/logout`) {
 
         return true;
 
@@ -81,11 +77,11 @@ import { ToastController } from '@ionic/angular';
 
     // Add our current access token from the service if present
     private addToken(req: HttpRequest<any>) {
-      if (this.authService.currentAccessToken) {
+      if (this.authService.accessToken) {
         return req.clone({
           headers: new HttpHeaders({
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            Authorization: `Bearer:${this.authService.currentAccessToken}`
+            Authorization: `Bearer:${this.authService.accessToken}`
           })
         });
       } else {
@@ -96,13 +92,20 @@ import { ToastController } from '@ionic/angular';
     // We are not just authorized, we couldn't refresh token or something else along the caching went wrong!
     private async handle400Error(err) {
       // Potentially check the exact error reason for the 400 then log out the user automatically
+      console.log(err.error.errorMessage);
+
       const toast = await this.toastController.create({
-        message: 'Logged out due to authentication mismatch',
-        duration: 2000
+        message: 'System error.',
+        duration: 2000,
+        position: 'top',
+        color:'warning'
       });
       toast.present();
-      this.authService.logout();
-      return of(null);
+    }
+
+   // refreshToken is expired, re-login
+    private async handle406Error(err) {
+       this.authService.toLoginPage();
     }
 
     // Indicates our access token is invalid, try to load a new one
@@ -113,7 +116,7 @@ import { ToastController } from '@ionic/angular';
         // Set to null so other requests will wait until we got a new token!
         this.tokenSubject.next(null);
         this.isRefreshingToken = true;
-        this.authService.currentAccessToken = null;
+        this.authService.accessToken = null;
 
         //get a new access token by fresh token
         return this.authService.getNewAccessToken().pipe(

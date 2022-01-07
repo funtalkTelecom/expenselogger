@@ -1,0 +1,64 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" class="header-search">
+      <ion-back-button defaultHref="/tabs/mall"></ion-back-button>
+      <!-- <ion-searchbar (ionInput)="searchItem($event)" [(ngModel)]="keyWord"></ion-searchbar> -->
+      <ion-searchbar [(ngModel)]="searchKey"></ion-searchbar>
+
+      <ion-button color="warning" fill="solid" (click)="searchItem()">Search</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="hotlist" *ngIf="!searchFlag">
+    <h3 class="search-title">hot search</h3>
+    <p>
+      <span *ngFor="let item of hotKeyList">{{item.keyName}}</span>
+      <!-- <span>women</span>
+      <span>furnish</span>
+      <span>cosmetic</span>
+      <span>toy</span>
+      <span>wine</span> -->
+    </p>
+
+  <div class="history">
+    <h3 class="search-title">search history</h3>
+    <ion-list>
+      <ion-item  *ngFor="let item of searchHistoryList"
+      (click)="goTosearchItem(item)"
+      long-press [delay]=500 (press)="removeSearchKey(item)" >{{item}}</ion-item>
+    </ion-list>
+
+  </div>
+  </div>
+
+  <div class="list-content" *ngIf="searchFlag">
+    <div class="sub-header">
+      <div>comphere</div>
+      <div>sale volume</div>
+      <div>price</div>
+    </div>
+
+    <ion-list>
+      <ion-item  *ngFor="let item of searchList">
+        <!-- <ion-avatar>
+          <img src="{{item.pic}}">
+        </ion-avatar> -->
+          <ion-thumbnail>
+             <img src="{{item.image}}">
+          </ion-thumbnail>
+          <ion-label class="list-lable">
+            <h2>{{item.productName}}</h2>
+            <p>price:{{item.price}} SEK <ion-button>add</ion-button></p>
+          </ion-label>
+
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <ion-infinite-scroll threshold="15%" (ionInfinite)="loadMoreSearch($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data ..."></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+
+</ion-content>

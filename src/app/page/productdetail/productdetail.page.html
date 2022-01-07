@@ -1,0 +1,91 @@
+<ion-header>
+      <ion-segment [(ngModel)]="tabs">
+        <ion-segment-button value="product">
+          <ion-label>product</ion-label>
+        </ion-segment-button>
+          <ion-segment-button value="detail">
+            <ion-label>detail</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="rate">
+            <ion-label>rate</ion-label>
+          </ion-segment-button>
+      </ion-segment>
+</ion-header>
+
+<ion-content>
+
+  <div [ngSwitch]="tabs" class="p-content">
+    <div class="product"  *ngSwitchCase="'product'">
+
+      <div class="p-img">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSr-iFW5W8n3_jxNKiclAP_k71Fi9PGcojsMUC-vb8zbwJthbBd"/>
+      </div>
+
+      <div class="p-info">
+        <div class="p-title">
+          <h2>PlayStation 4</h2>
+          <p>With PS4, gaming becomes a lot more power packed. Ultra-fast processors, high-performance system, real-time game sharing, remote play and lots more makes it the ultimate companion device.</p>
+        </div>
+        <div class="product-price">
+          <p>special price: <span class="price">120.00 SEK</span></p>
+          original price:<span class="old-price">160.00 SEK</span>
+        </div>
+      </div>
+
+      <div class="p-attr">
+
+        <div class="color">
+          <strong>color:</strong>
+          <div class="color-item">
+                <span>white</span>
+                <span>black</span>
+                <span>blue</span>
+                <span>red</span>
+                <span>green</span>
+                <span>purple</span>
+          </div>
+        </div>
+
+        <div class="number">
+          <strong>number:</strong>
+          <div class="cart-number">
+            <div class="input-left">-</div>
+            <div class="input-center">
+              <input type="text" readonly value="1">
+            </div>
+            <div class="input-right">+</div>
+          </div>
+        </div>
+
+        <div class="fee mb10">
+          <strong> delivery fee: free</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="column2"  *ngSwitchCase="'detail'">
+      detail
+    </div>
+    <div class="column3"  *ngSwitchCase="'rate'">
+      rate
+    </div>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="footer-bar">
+      <div class="carticon">
+         <ion-icon name="cart-outline"></ion-icon>
+         <p>cart</p>
+         <ion-badge color="danger">10</ion-badge>
+      </div>
+      <div class="addcart">add</div>
+      <div class="buynow">buy</div>
+    </div>
+  </ion-toolbar>
+</ion-footer>

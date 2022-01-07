@@ -1,9 +1,103 @@
-<ion-header>
+<!DOCTYPE html>
+<!-- <ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>account</ion-title>
+  </ion-toolbar>
+</ion-header> -->
+
+<ion-content>
+
+  <div class="account-top">
+    <div class="outer" [ngStyle]="{'background-image':'url('+photo+')'}">
+      <div class="inner" (click)="openPictureOption()">
+        <ion-icon name="camera" class="camera-icon"></ion-icon>
+      </div>
+    </div>
+  </div>
+<!-- <div class="container">
+<div class="overlay">
+  <ion-avatar>
+    <img src="../../../assets/login.jpg">
+  </ion-avatar>
+</div>
+</div> -->
+<ion-card>
+  <ion-card-header>
+    <ion-card-title>{{user?.userName}}</ion-card-title>
+    <ion-card-subtitle>Location</ion-card-subtitle>
+  </ion-card-header>
+  <ion-card-content>
+  <ion-card-content>
+    <ion-item lines="none">
+      <ion-icon name="mail"></ion-icon>
+      <ion-label>{{user?.email}}</ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-icon name="call"></ion-icon>
+      <ion-label>{{user?.phoneNumber}}</ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-icon name="location-outline"></ion-icon>
+      <ion-label>{{user?.address}}</ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-icon name="egg-outline"></ion-icon>
+      <ion-label>{{user?.birth}}</ion-label>
+    </ion-item>
+
+  </ion-card-content>
+  </ion-card-content>
+</ion-card>
+
+
+</ion-content>
+
+
+
+
+
+<!-- <ion-header>
   <ion-toolbar>
     <ion-title>account</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div class="login">
+    <div class="avatar">
+      <img src="https://www.europarl.europa.eu/resources/library/images/20160609PHT31661/20160609PHT31661_original.jpg">
+    </div>
+    <div class="login-register">
+      <ion-button [routerLink]="['/login']">login in</ion-button>
+      <ion-button [routerLink]="['/register']">sign up</ion-button>
+    </div>
+  </div>
 
-</ion-content>
+  <ion-list  lines="none">
+    <ion-item-divider></ion-item-divider>
+    <ion-item>
+      <ion-icon name="server-outline" item-start></ion-icon>
+      <span>all orders</span>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="terminal-outline" item-start></ion-icon>
+      <span>paid order</span>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="stats-chart-outline"></ion-icon>
+      <span>wait for receiving</span>
+    </ion-item>
+
+    <ion-item-divider></ion-item-divider>
+    <ion-item>
+      <ion-icon name="scan-circle-outline"></ion-icon>
+      <span>online service</span>
+    </ion-item>
+    <ion-item>
+      <ion-icon name="ribbon-outline"></ion-icon>
+      <span>my favorite</span>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content> -->

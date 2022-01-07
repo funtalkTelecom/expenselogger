@@ -1,5 +1,6 @@
+import { AuthService } from './auth.service';
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, of} from 'rxjs';
 import {Expense} from '../interface/expense';
 import { LocalStoreService } from './localstore.service';
 import { DatetimeService } from './datetime.service';
@@ -12,43 +13,69 @@ import { HttpClient } from '@angular/common/http';
 export class ExpenseService {
 
     apiUrl = environment.apiUrl;
+    // expenseArray: Expense[]=[];
+
     private readonly expenses: BehaviorSubject<Expense[]>;
-    private readonly todayTotalExpense: BehaviorSubject<number>;
+    private readonly totalExpense: BehaviorSubject<number>;
 
     constructor(
       private http: HttpClient,
       private datetimeService: DatetimeService,
       private storageService: LocalStoreService,
+      private authService: AuthService
       ) {
         this.expenses = new BehaviorSubject<Expense[]>(null);
-        this.todayTotalExpense = new BehaviorSubject<number>(0);
+        this.totalExpense = new BehaviorSubject<number>(0);
+    }
+
+
+    addExpense(expense: Expense): Observable<any> {
+
+      if(this.authService.consumerId){
+            expense.userName = this.authService.consumerId;
+            expense.createTime=this.datetimeService.getCurrentDateTime();
+            return this.http.post(`${this.apiUrl}/createExpense`, expense);
+      }else{
+            this.authService.toLoginPage();
+      }
+    }
+
+    getExpenseByDate(date: string,page: number, pageSize: number): Observable<any>{
+
+      return this.http.get(`${this.apiUrl}/getExpenseByDate/${date}/${page}/${pageSize}`);
+
+    }
+
+    getSumAmountByDate(date: string): Observable<any>{
+
+      return this.http.get(`${this.apiUrl}/getSumAmountByDate/${date}`);
+
     }
 
     getTodayTotalSubscription(): BehaviorSubject<number> {
-      return this.todayTotalExpense;
-  }
+      return this.totalExpense;
+    }
 
-  async setTodayTotalExpense(total: number): Promise<void> {
-      return this.todayTotalExpense.next(total);
-  }
+    async settotalExpense(total: number): Promise<void> {
+        return this.totalExpense.next(total);
+    }
 
-  async getExpenses(): Promise<Expense[]> {
-      return this.expenses.getValue();
-  }
+    async getExpenses(): Promise<Expense[]> {
+        return this.expenses.getValue();
+    }
 
-  async setExpenses(expenses: Expense[]): Promise<void> {
-      if (expenses) {
-          this.setTodayTotalExpense(this.calculateTodayTotal(expenses));
-      }
-      return this.expenses.next(expenses);
-  }
+    async setExpenses(expenses: Expense[]): Promise<void> {
+        if (expenses) {
+            this.settotalExpense(this.calculateTotalExpense(expenses));
+        }
+        return this.expenses.next(expenses);
+    }
 
     getExpensesSubscription(): BehaviorSubject<Expense[]> {
         return this.expenses;
     }
 
-
-    calculateTodayTotal(expenses: Expense[]): number {
+    calculateTotalExpense(expenses: Expense[]): number {
         let total = 0;
         for (const expense of expenses) {
             total += expense.amount;
@@ -56,11 +83,7 @@ export class ExpenseService {
         return total;
     }
 
-    addExpense(expense: Expense): Observable<any> {
-      expense.createTime=this.datetimeService.getCurrentDateTime();
-      console.log(expense);
-      return this.http.post(`${this.apiUrl}/createExpense`, expense);
-  }
+
 
 
   async getTodayExpensesFromLocal(): Promise<void> {

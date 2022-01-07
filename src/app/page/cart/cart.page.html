@@ -1,0 +1,62 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button (click)="close()">
+        <ion-icon slot="icon-only" name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Cart</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <div class="container">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-list>
+            <ion-item class="ion-no-padding">
+              <div class="cart-left">
+              <ion-checkbox color="danger"></ion-checkbox>
+              <ion-thumbnail>
+                <img src="https://www.europarl.europa.eu/resources/library/images/20160609PHT31661/20160609PHT31661_original.jpg">
+              </ion-thumbnail>
+              </div>
+              <div class="cart-right">
+                <h5>product name product name product name product name</h5>
+
+                <div class="cart-info">
+                  <p class="cart-price">{{ 160 | currency:'SEK' }}</p>
+                  <div class="cart-num">
+                    <div class="input-left">-</div>
+                    <div class="input-center">
+                      <input type="text" readonly value="1" name="num" id="num">
+                    </div>
+                    <div class="input-right">+</div>
+                  </div>
+              </div>
+              </div>
+            </ion-item>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="checkout-left">
+    <ion-checkbox color="danger"></ion-checkbox>select all
+    <strong>SUM: 2000.00 SEK</strong>
+    </div>
+    <ion-buttons slot="end">
+     <ion-button (click)="checkout()" color="danger">
+      Checkout
+    </ion-button>
+    </ion-buttons>
+
+  </ion-toolbar>
+</ion-footer>

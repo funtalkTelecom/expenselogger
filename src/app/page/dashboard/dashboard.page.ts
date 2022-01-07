@@ -14,14 +14,17 @@ import {ExpenseTypes} from '../../common/constant';
 })
 export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
 
-    expenses: Expense[];
+    expenses: Expense[]=[];
+
+    searchMonth='';
+    lastPage=false;
+    hiddenNoMore=true;
+    monthAmount=0;
+
 
     subscription: SubscriptionLike;
-    installDate: Date;
     selectedDate: Date;
     dateSubscription: SubscriptionLike;
-
-    todayDate: Date;
 
     expenseTypes: any;
     selectedType: string;
@@ -34,14 +37,16 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
 
     userCredsSubscription: SubscriptionLike;
 
+    page = 1;
+    pageSize = 10;
+
     constructor(
         private modalController: ModalController,
         private datetimeService: DatetimeService,
         private actionSheetController: ActionSheetController,
         private expenseService: ExpenseService
     ) {
-        this.installDate = this.datetimeService.getInstallDate();
-        this.todayDate = this.datetimeService.getCurrentDateTime();
+        this.searchMonth=this.datetimeService.getDateTimeISOWithFormat(new Date(),'YYYY-MM');
         this.expenseTypes = ExpenseTypes;
         this.selectedType = ExpenseTypes.All.toString();
         this.todayTotal = null;
@@ -49,49 +54,86 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     ngOnInit() {
-        this.totalSubscription = this.expenseService.getTodayTotalSubscription()
-            .subscribe({
-                next: (total: number) => {
-                    this.todayTotal = total;
-                },
-                error: (err) => {
-                    console.log(err);
-                },
-                complete: () => {
-                }
-            });
+        // this.totalSubscription = this.expenseService.getTodayTotalSubscription()
+        //     .subscribe({
+        //         next: (total: number) => {
+        //             this.todayTotal = total;
+        //         },
+        //         error: (err) => {
+        //             console.log(err);
+        //         },
+        //         complete: () => {
+        //         }
+        //     });
 
-        this.dateSubscription = this.datetimeService.getSelectedDateSubscription()
-            .subscribe({
-                next: (date: Date) => {
-                    this.selectedDate = date;
-                    console.log(date);
-                },
-                error: (err) => {
-                    console.log(err);
-                },
-                complete: () => {
-                }
-            });
-        this.subscription = this.expenseService.getExpensesSubscription()
-            .subscribe({
-                next: (expense: Expense[]) => {
-                    if (expense != null) {
-                        this.expenses = expense;
-                    } else {
-                        this.expenses = [];
+        this.getSumAmountByDate();
+        this.getExpenseByDate();
+
+    }
+
+    getSumAmountByDate(): void{
+
+      this.expenseService.getSumAmountByDate(this.searchMonth).subscribe(
+        {next:(monthAmount)=>{
+          this.monthAmount=monthAmount;
+        }}
+      );
+
+    }
+
+    getExpenseByDate(event?): void{
+      this.expenseService.getExpenseByDate(this.searchMonth,this.page,this.pageSize)
+      .subscribe({
+                    next: (expense) => {
+                      console.log(expense);
+                        if (expense != null) {
+                            this.expenses = this.expenses.concat(expense.content);
+                            if(expense.last===true){
+                              this.hiddenNoMore=false;
+                              this.lastPage=expense.last;
+                              // event.target.disabled= true;
+                            }
+                        }
+                    },
+                    error: (err) => {
+                        console.log(err);
                     }
-                },
-                error: (err) => {
-                    console.log(err);
-                },
-            });
+      });
+
+      if(event){
+            event.target.complete();
+      }
+
+    }
+
+    loadMore(event): void{
+
+      if(this.lastPage){
+
+        event.target.disabled= true;
+        // event.target.complete();
+        // this.hiddenNoMore=false;
+        // setTimeout(()=>{this.hiddenNoMore=true;},3000);
+      }else{
+        this.page++;
+        this.getExpenseByDate(event);
+      }
+
+
     }
 
     async presentModal() {
         const modal = await this.modalController.create({
-            component: AddExpenseComponent
+            component: AddExpenseComponent,
+            componentProps: { user: '1' },
         });
+
+        modal.onDidDismiss().then((data) => {
+          console.log(data);
+          this.expenses=[];
+          this.ngOnInit();
+        });
+
         return await modal.present();
     }
 
@@ -99,15 +141,15 @@ export class DashboardPage implements OnInit, OnDestroy, AfterViewInit {
     }
 
     changeSelectedDate(value: string): void {
-        this.selectedDate = this.datetimeService.createDateFromString(value);
-        this.datetimeService.setSelectedDate(value);
-        this.expenseService.emitExpensesByDateFromLocal(this.selectedDate);
-    }
-
-    setCurrentToTodayDate(): void {
-        this.datetimeService.setSelectedDate(this.datetimeService.getCurrentDateTime());
+      this.searchMonth= value.substring(0,7);
+      this.selectedDate = this.datetimeService.createDateFromString(value);
+      this.expenses=[];
+      this.getSumAmountByDate();
+      this.getExpenseByDate();
+        // this.datetimeService.setSelectedDate(value);
         // this.expenseService.emitExpensesByDateFromLocal(this.selectedDate);
     }
+
 
     changeSelectedValue(s: string): void {
         this.selectedType = s;

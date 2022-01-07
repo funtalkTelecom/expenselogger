@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import { Storage } from '@capacitor/storage';
 
+export const INTRO_KEY = 'intro-slides';
+
 @Injectable({
     providedIn: 'root'
 })

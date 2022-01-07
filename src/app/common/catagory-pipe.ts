@@ -10,7 +10,7 @@ export class CatagoryPipe implements PipeTransform {
 		if (type === 'All' || type === undefined) {
 			return value;
 		} else {
-			return value.filter(val => val.type === type);
+			return value.filter(val => val.expenseType === type);
 		}
 	}
 }

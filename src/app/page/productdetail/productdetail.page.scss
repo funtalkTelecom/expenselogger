@@ -1,0 +1,164 @@
+.footer-bar{
+
+  display: flex;
+  height: 60px;
+
+  .carticon{
+    position: relative;
+    width: 100px;
+    height:60px ;
+    text-align: center;
+
+    ion-icon{
+      color: #999;
+      font-size: 50px;
+      height: 40px;
+    }
+    p{
+      margin-top: -8px;
+      color: #999;
+      font-size: 20px;
+    }
+    ion-badge{
+      position: absolute;
+      right: 10px;
+      top:8px;
+
+    }
+  }
+  .addcart{
+    flex:1;
+    line-height: 60px;
+    text-align: center;
+    color: #fff;
+    background: orange;
+    font-size: 20px;
+  }
+  .buynow{
+    flex:1;
+    line-height: 60px;
+    text-align: center;
+    color: #fff;
+    background: red;
+    font-size: 20px;
+
+  }
+
+}
+
+.mb10{
+  margin-bottom: 10px;
+}
+
+.p-content{
+
+  background: #efefef;
+  .product{
+
+    .p-img{
+      width: 100%;
+      height: 320px;
+      img{
+        width: 100%;
+        height: 320px;
+      }
+    }
+
+    .p-info{
+      background: #fff;
+      padding: 16px;
+    }
+    .p-title{
+
+      h2{
+        font-size: 25px;
+        margin: 0px;
+      }
+      p{
+        font-size: 13px;
+        color: #666;
+      }
+    }
+
+    .product-price{
+      margin-top: 50px;
+      p{
+        margin: 0px;
+      }
+      .old-price{
+        color: #666;
+        text-decoration: line-through;
+        font-size: 13px;
+      }
+      .price{
+        color:#f23030;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .p-attr{
+     padding: 16px;
+     background: white;
+
+     .color{
+       padding-bottom: 20px;
+       display: flex;
+       strong{
+         padding-top: 5px;
+         width: 100px;
+       }
+       .color-item{
+         flex:1;
+         span{
+          display: inline-block;
+          padding: 4px 16px;
+          margin-right: 8px;
+          margin-bottom: 8px;
+          border: 1px solid #eee;
+          border-radius: 8px;
+       }
+       }
+
+     }
+     .number{
+
+       padding-bottom: 8px;
+
+       .cart-number{
+
+         width: 120px;
+         display: flex;
+         float: right;
+
+         .input-left, .input-right{
+           width: 38px;
+           height: 28px;
+           line-height: 28px;
+           text-align: center;
+           background: #f8f8f8;
+           border:1px solid #f8f8f8;
+         }
+         .input-center{
+           flex:1;
+           height: 28px;
+           line-height: 28px;
+           input{
+             border: 1px solid #f8f8f8;
+             height: 28px;
+             line-height: 28px;
+             width: 100%;
+             text-align: center;
+           }
+         }
+
+       }
+     }
+
+     .fee{
+       margin-top: 20px;
+     }
+
+  }
+
+}

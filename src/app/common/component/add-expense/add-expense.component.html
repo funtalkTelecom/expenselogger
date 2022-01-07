@@ -15,7 +15,7 @@
 
      <ion-item>
                  <ion-label>Select Date</ion-label>
-                 <ion-datetime displayFormat="DD/MMM/YYYY" formControlName="expenseDate"></ion-datetime>
+                 <ion-datetime displayFormat="DD/MM/YYYY" formControlName="expenseDate"></ion-datetime>
      </ion-item>
 
       <ion-item>
@@ -28,12 +28,12 @@
 
       <ion-item>
           <ion-label>Select Type</ion-label>
-          <ion-select value="" okText="Ok" cancelText="Cancel" interface="popover" formControlName="type" required>
+          <ion-select value="" okText="Ok" cancelText="Cancel" interface="popover" formControlName="expenseType" required>
               <ion-select-option [value]="type.value" *ngFor="let type of expenseTypes | keyvalue" >{{type.value}}</ion-select-option>
           </ion-select>
       </ion-item>
       <br>
-      <ion-button color="primary" fill="solid" size="large" expand="block"
+      <ion-button color="primary" fill="solid" size="large" expand="block" 
                   (click)="addExpense()" [disabled]="!addExpenseForm.valid">add</ion-button>
-  </form>
+    </form>
 </ion-content>

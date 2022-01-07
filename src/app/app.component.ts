@@ -1,13 +1,17 @@
-import {Component, HostListener} from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 
 import {Platform} from '@ionic/angular';
 import {LocalStoreService} from './service/localstore.service';
 import {AppRoutes, StorageKeys} from './common/constant';
 import {DatetimeService} from './service/datetime.service';
-import {Router} from '@angular/router';
+import {NavigationEnd, Router} from '@angular/router';
 import {Device} from '@capacitor/device';
 import {SplashScreen  } from '@capacitor/splash-screen';
 import {StatusBar } from '@capacitor/status-bar';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
+import { CapacitorGoogleMaps } from '@capacitor-community/capacitor-googlemaps-native';
+import { environment } from 'src/environments/environment';
 
 const ACCESS_TOKEN_KEY = 'access-token';
 const REFRESH_TOKEN_KEY = 'refresh-token';
@@ -17,6 +21,7 @@ const REFRESH_TOKEN_KEY = 'refresh-token';
     styleUrls: ['app.component.scss']
 })
 export class AppComponent {
+
     constructor(
         private platform: Platform,
         private localStoreService: LocalStoreService,
@@ -26,13 +31,20 @@ export class AppComponent {
         // this.initializeApp().then(() => {
         //     this.initializeInstallDate();
         // });
+
+        // CapacitorGoogleMaps.initialize({
+        //   key: environment.mapsKey
+        // });
     }
+
 
     @HostListener('window:beforeunload', ['$event'])
     unloadHandler(event) {
-      this.localStoreService.removeFromLocalStorage( ACCESS_TOKEN_KEY);
-      this.localStoreService.removeFromLocalStorage( REFRESH_TOKEN_KEY);
+      console.log('window');
+      // this.localStoreService.removeFromLocalStorage( ACCESS_TOKEN_KEY);
+      // this.localStoreService.removeFromLocalStorage( REFRESH_TOKEN_KEY);
     }
+
 
     async initializeApp(): Promise<void> {
         return await this.platform.ready().then(() => {

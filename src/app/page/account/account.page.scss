@@ -1,0 +1,123 @@
+ion-content{
+  --ion-background-color:#90a4c5;
+}
+
+// ion-header{
+//   position: relative;
+//   --ion-background-color:#3e6777;
+// }
+
+ion-toolbar{
+  --background:var(--ion-color-primary);
+  // --opacity:0;
+}
+
+ion-title{
+  font-size: 20px;
+  font-style: normal;
+  font-weight: lighter;
+  color: #fff;
+}
+
+.container{
+  width: 100%;
+  height: 200px;
+  background-color: #355997;
+}
+
+ion-avatar{
+  height: 100px;
+  width: 100px;
+  margin: auto;
+}
+
+.overlay{
+  position: relative;
+  text-align: center;
+  top: 60%;
+}
+
+ion-card{
+  // --ion-background-color:transparent;
+  box-shadow: none;
+  text-align: center;
+}
+
+ion-item{
+  --ion-item-background:#536c77;
+  align-items: center;
+  color: #c2c3c4;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode';
+  font-style:italic;
+  font-weight: 400;
+  font-size: 15px;
+  border-radius: 5px;
+  // height: 35px;
+  // --min-height:35px;
+  margin-bottom: 10px;
+
+
+}
+
+ion-label{
+  text-align: center;
+}
+
+
+
+// .login{
+//   padding: 16px;
+
+//   .avatar{
+//     text-align: center;
+//     img{
+//       width: 80px;
+//       height: 80px;
+//       border-radius: 50px;
+//     }
+//   }
+//   .login-register{
+//     text-align: center;
+//   }
+// }
+
+// .list-ios.list-inset{
+//   margin: 0px;
+//   border-radius: 0px;
+// }
+
+
+
+.account-top {
+  width: 100%;
+  height: 150px;
+  background-color:#355997;
+}
+
+.outer {
+  width: 100px !important;
+  height: 100px !important;
+  background-size: 100px 100px;
+  border-radius: 100%;
+  margin: 0 auto;  // center in left and right
+  position: relative;  // center in up and down
+  top:50%; // center in up and down
+  transform: translateY(-50%); // center in up and down
+}
+.inner {
+  background-color: #075E54;
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.camera-icon {
+  height: 30px;
+  width: 30px;
+  color: white;
+}

@@ -1,0 +1,19 @@
+<ion-content>
+<ion-list>
+  <div class="ion-margin">
+    <ion-segment  mode="ios"  [value]="segmentValue"  (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="1">
+        <ion-label>Log In</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="2">
+        <ion-label>Sign Up</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <app-signin *ngIf="segmentValue==='1'"></app-signin>
+  <app-signup *ngIf="segmentValue==='2'"></app-signup>
+
+</ion-list>
+
+</ion-content>

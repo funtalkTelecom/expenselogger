@@ -1,0 +1,16 @@
+ion-slides{
+  height: 100%;
+  ion-slide{
+    background-position: center;
+    background-size:cover;
+    background-repeat: no-repeat;
+  }
+  .top-right{
+    align-items: initial;
+    justify-content: flex-end;
+  }
+  // .transformButton{
+  //   transform: translateY(10vh);
+  // }
+
+}
