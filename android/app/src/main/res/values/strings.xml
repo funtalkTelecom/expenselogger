@@ -4,4 +4,5 @@
     <string name="title_activity_main">expenselogger</string>
     <string name="package_name">io.ionic.starter</string>
     <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="server_client_id">322038993812-hj6nn3qog1u5g5417dt9mskfhrh9480c.apps.googleusercontent.com</string>
 </resources>

@@ -16,7 +16,7 @@ export class LoginPage implements OnInit {
 
     Device.getInfo().then((deviceInfo) => {
       console.log(deviceInfo);
-      if (deviceInfo.platform !== 'web') {
+      if (deviceInfo.platform === 'ios') {
           Keyboard.setResizeMode({mode: KeyboardResize.None});
           Keyboard.addListener('keyboardWillShow', () => {
               console.log('Keyboard Event');

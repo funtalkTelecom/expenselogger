@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   mapsKey: 'AIzaSyDwrCRSEAyFvOnkj4uDRmo6YIu_akqXedw',
-  apiUrl:'http://192.168.10.195:8080/api/v1'
+  apiUrl:'http://192.168.10.195:8080/api/v1',
+  apiResourceUrl:'http://192.168.10.195:8080'
 };
 
 /*

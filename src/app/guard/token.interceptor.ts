@@ -11,10 +11,10 @@ import {
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { LocalStoreService } from '../service/localstore.service';
- import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
- import { retry, catchError, map, switchMap, finalize, filter, take } from 'rxjs/operators';
+ import { BehaviorSubject, from, Observable, of, throwError } from 'rxjs';
+ import { retry, catchError, map, switchMap, finalize, filter, take, tap, delay } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { ModalController, ToastController } from '@ionic/angular';
+import { ModalController, ToastController, LoadingController } from '@ionic/angular';
 
  @Injectable()
  export class TokenInterceptor implements HttpInterceptor {
@@ -23,30 +23,64 @@ import { ModalController, ToastController } from '@ionic/angular';
   tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
   isRefreshingToken = false;
 
+  loadingFlag= false;
+  loadingMap: Map<string,{loading: boolean; http: boolean}>= new Map();
+
   constructor(
     private router: Router,
     private storage: LocalStoreService,
     private authService: AuthService,
     private toastController: ToastController,
+    private loadingController: LoadingController,
     private modalController: ModalController
   ) {}
 
     // Intercept every HTTP call
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
-        console.log('-----intercept------'+request.url);
         if(this.isInBlockedList(request.url)){
           return next.handle(request);
         }
 
-        return next.handle(this.addToken(request)).pipe(
+        if(!this.loadingFlag){ // avoid overlap display.
+            this.loadingFlag=true;
+            this.loadingMap.set(request.url,{loading:false,http:true});
 
+            this.loadingController.getTop().then(
+              hasLoading =>{
+                if(!hasLoading){
+                  this.loadingController.create({
+                    mode:'ios',
+                    spinner​:'circular',
+                    translucent:true
+                  }).then(loading=> {
+
+                    console.log(this.loadingMap.get(request.url));
+
+                      if(this.loadingMap.get(request.url)?.http){
+                        this.loadingMap.set(request.url, {...this.loadingMap.get(request.url),loading:true});
+                        loading.present();
+                      }
+                  });
+                }
+              });
+
+        }
+
+
+         return next.handle(this.addToken(request)).pipe(
+           delay(2000),
+          tap((x)=>{
+            console.log('----interceptor-------'+x);
+          }),
           catchError(err => {
-            console.log(err);
+
             if (err instanceof HttpErrorResponse) {
+
               switch (err.status) {
                 case 400:
-                  return this.handle400Error(err);
+                  this.handle400Error(err);
+                  return throwError(err);   //pass the error to service to handle.
                 case 401:
                   return this.handle401Error(request, next);
                 case 406:
@@ -54,13 +88,43 @@ import { ModalController, ToastController } from '@ionic/angular';
                 default:
                   return throwError(err);
               }
-            } else {
-              return throwError(err);
+            }
+
+            return throwError(err);
+
+          }),
+          finalize(() => {
+
+            this.loadingFlag=false;
+            if(this.loadingMap.get(request.url)){
+              this.loadingMap.set(request.url, {...this.loadingMap.get(request.url),http:false});
+              if(this.loadingMap.get(request.url).loading){
+                this.loadingController.dismiss();
+              }
+              this.loadingMap.delete(request.url);
             }
           })
+
         );
 
     }
+
+    async loading(flag: boolean){
+
+      let loading;
+
+      if(flag){
+              loading = await this.loadingController.create({
+                        message: 'Please wait...'
+                      });
+              await loading.present();
+
+      }else{
+        loading.dismiss();
+      }
+
+    }
+
 
     // Filter out URLs where you don't want to add the token!
     private isInBlockedList(url: string): boolean {
@@ -97,7 +161,7 @@ import { ModalController, ToastController } from '@ionic/angular';
       const toast = await this.toastController.create({
         message: 'System error.',
         duration: 2000,
-        position: 'top',
+        position: 'middle',
         color:'warning'
       });
       toast.present();

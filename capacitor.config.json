@@ -1,6 +1,13 @@
 {
-	"appId": "io.ionic.starter",
+	"appId": "com.taby.experiment",
 	"appName": "expenselogger",
 	"webDir": "www",
-	"bundledWebRuntime": false
+	"bundledWebRuntime": false,
+  "plugins": {
+      "GoogleAuth": {
+        "scopes": ["profile", "email"],
+        "serverClientId": "322038993812-hj6nn3qog1u5g5417dt9mskfhrh9480c.apps.googleusercontent.com",
+        "forceCodeForRefreshToken": true
+      }
+  }
 }

@@ -1,16 +1,37 @@
-<ion-header>
+<ion-header [hidden]="scanActive">
   <ion-toolbar>
     <ion-title>camera</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content [style.--background]="scanActive? '#00000000':'#fff'">
   <img [src]='photo'>
+
+  <p class="ion-text-center" *ngIf="scanResult && !scanActive">{{scanResult}}</p>
+
+
+  <ion-row class="scanner-buttons" [hidden]="!scanActive">
+    <ion-col class="ion-no-padding">
+      <ion-button expand="full" (click)="stopBarcode()">Stop</ion-button>
+    </ion-col>
+  </ion-row>
+
+  <div class="scan-box" [hidden]="!scanActive">
+
+  </div>
+
+  <ion-fab vertical="bottom" horizontal="left" slot='fixed' [hidden]="scanActive">
+    <ion-fab-button (click)='startBarcode()'>
+      <ion-icon name="scan"></ion-icon>
+    </ion-fab-button>
+   </ion-fab>
 
   <ion-fab vertical="bottom" horizontal="center" slot='fixed'>
    <ion-fab-button (click)='takePicture()'>
      <ion-icon name="camera"></ion-icon>
    </ion-fab-button>
   </ion-fab>
+
+
 
 </ion-content>

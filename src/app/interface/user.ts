@@ -8,6 +8,7 @@ export interface User {
   email: string;
   address: string;
   roles: [];
+  image: Image;
   birth: Date;
   photoUrl: string;
   type: string;
@@ -18,4 +19,13 @@ export interface User {
 export interface Role {
   id: number;
   roleName: string;
+}
+
+export interface Image {
+  id: number;
+  fileName: string;
+  path: string;
+  uploadTime: Date;
+  comment: string;
+  photographer: string;
 }

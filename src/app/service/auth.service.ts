@@ -186,6 +186,12 @@ export class AuthService implements OnInit {
       return this.http.get(`${this.apiUrl}/getuserbyname/${this.consumerId}`);
     }
 
+    uploadData(formData: FormData): Observable<any> {
+      return this.http.post(`${this.apiUrl}/uploadAvatar`, formData).pipe(
+        tap((x)=>console.log(x)
+        )
+      );
+    }
 
 
 

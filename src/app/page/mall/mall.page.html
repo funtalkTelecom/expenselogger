@@ -27,8 +27,10 @@
 
     <ion-grid>
       <ion-row>
-          <ion-col size="6"
-            *ngFor="let item of recommendationList" (click)="toDetailPage(item)">
+          <!-- <ion-col size="6"
+            *ngFor="let item of recommendationList" (click)="toDetailPage(item)"> -->
+            <ion-col size="6"
+            *ngFor="let item of recommendationList" routerLink='../productdetail' [queryParams]="item">
             <img src="{{item.image}}">
             <p>{{item.productName}}</p>
           </ion-col>

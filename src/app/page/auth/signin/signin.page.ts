@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/service/auth.service';
 import { Router } from '@angular/router';
 import { AlertController, LoadingController } from '@ionic/angular';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
 @Component({
   selector: 'app-signin',
@@ -25,7 +26,7 @@ export class SigninPage implements OnInit {
 
   initForm(){
     this.form = new FormGroup({
-      userName: new FormControl('王新谱',{validators:[Validators.required]}),
+      userName: new FormControl('jack',{validators:[Validators.required]}),
       passWord: new FormControl('123456',{validators:[Validators.required,Validators.minLength(6)]}),
     });
   }
@@ -43,7 +44,11 @@ export class SigninPage implements OnInit {
       return;
     }
 
-    const loading = await this.loadingController.create();
+    const loading = await this.loadingController.create({
+      mode:'ios',
+      spinner​:'circular',
+      translucent:true
+    });
     await loading.present();
 
     this.authService.login(this.form.value).subscribe(
@@ -65,6 +70,14 @@ export class SigninPage implements OnInit {
       }
     );
 
+  }
+
+  async toGoogleAuth(){
+
+    const user = await GoogleAuth.signIn();
+    if (user) {
+      console.log('----google user----'+ JSON.stringify(user));
+     }
   }
 
 }

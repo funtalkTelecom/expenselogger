@@ -16,12 +16,23 @@ export class ProductdetailPage implements OnInit {
 
   ngOnInit() {
 
-    this.activatedRoute.paramMap.pipe(
+    // receive the param from method below :
+    // this.router.navigate(['../productdetail',item], {relativeTo: this.activatedRoute})
+      this.activatedRoute.paramMap.pipe(
       switchMap((params: ParamMap) => {
          console.log(params);
          return of(null);
         }
        )).subscribe();
+
+    //receive the param from method below :
+    // this.router.navigate(['../productdetail',item], {relativeTo: this.activatedRoute})
+       console.log('-----productName------'+this.activatedRoute.snapshot.paramMap.get('productName'));
+
+    //  receive the param from tag attributes below :  routerLink='../productdetail' [queryParams]="item"
+    this.activatedRoute.queryParams.subscribe(
+      res=>console.log(res.productName)
+    );
   }
 
 }
